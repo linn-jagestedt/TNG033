@@ -29,83 +29,114 @@ Set::Set() : head{new Node{}}, counter{0} {  // create the dummy node
 Set::Set(int x) : Set() {
 
     Node* seccondNode = new Node(x, nullptr);
-    Node* dummy = new Node(0, seccondNode);
+    head->next = seccondNode;
 }
 
 // Constructor: create a set with elements
 // elements is not sorted and values in it may not be unique
 Set::Set(const std::vector<int>& elements) : Set() 
 {
-    std::vector<int> temp(elements);
-    Set* set = new Set();
 
-    int minVal = INT32_MAX;
-    int index = 0;
+    int maxVal = INT32_MIN;
 
-    head = new Node();
+    for (size_t i = 0; i < elements.size(); i++)
+    {
+        if (elements[i] > maxVal) {
+            maxVal = elements[i];
+        }
+    }
+
+    int lastMinVal = INT32_MIN;
+
     Node* lastNode = head;
 
-    while (temp.size() > 0) 
+    while (lastMinVal != maxVal)
     {
-        // Find the smallest value in the list
-        for (int j = 0; j < temp.size(); j++) 
+        int minVal = INT32_MAX;
+
+        for (int i = 0; i < elements.size(); i++)
         {
-            // If the current value is less the smallest value, update the value and the index
-            if (temp[j] < minVal) 
-            {
-                minVal = temp[j];
-                index = j;
+            if (elements[i] > lastMinVal && elements[i] < minVal) {
+                minVal = elements[i];
             }
         }
 
         // Create a new node with the smallest element
-        Node* node = new Node[temp[index], 0];
-        
+        Node* node = new Node(minVal, 0);
+            
         // Create a link between the last node and the current
         lastNode->next = node;
         lastNode = node;
 
-        // Remove the element from the list and reset values
-        temp.erase(temp.begin() + index);
-        index = 0;
-        minVal = INT32_MAX;
-    }
+        lastMinVal = minVal;
+    } 
 }
 
 // copy constructor
-Set::Set(const Set& rhs) : Set() {
-    // ADD CODE
+Set::Set(const Set& rhs) : Set() 
+{
+    Node* current = rhs.head->next;
+    Node* lastNode = head;
+    
+    while (current != nullptr) {
+        Node* newNode = new Node(current->value, nullptr);
+        lastNode->next = newNode; 
+        lastNode = newNode;
+        current = current->next;
+    }
 }
 
 // Assignment operator: use copy-and-swap idiom
 Set& Set::operator=(Set rhs) {
-    // ADD CODE
+    head = rhs.head;
 
     return *this;
 }
 
 // Destructor: deallocate all nodes
-Set::~Set() {
-    // ADD CODE
+Set::~Set() 
+{
+    Node* current = head;
+    
+    while (current != nullptr) {
+        Node* next = current->next;
+        current->~Node();
+        current = next;
+    }
 }
 
 // Return number of elements in the set
-std::size_t Set::cardinality() const {
-    // ADD CODE
-    return 0;  // delete, if needed
+std::size_t Set::cardinality() const 
+{
+    Node* current = head;
+    ssize_t count = 0;
+
+    while (current->next != nullptr) {
+        current = current->next;
+        count++;
+    }
+
+    return count; 
 }
 
 // Test if set is empty
 bool Set::empty() const {
-    // ADD CODE
-    return true;  // delete, if needed
-
+    return head->next == nullptr;
 }
 
 // Test if x is an element of the set
 bool Set::member(int x) const {
-    // ADD CODE
-    return false;  // delete, if needed
+    Node* current = head;
+
+    while (current != nullptr) 
+    {
+        if (current->value == x) {
+            return true;
+        }
+        current = current->next;
+    }
+
+    return false;
 }
 
 // Return true, if *this is a subset of Set b
