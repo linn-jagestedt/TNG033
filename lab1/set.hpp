@@ -81,4 +81,10 @@ private:
     friend std::ostream& operator<<(std::ostream& os, const Set& rhs);
 
     /* Add Auxiliarly functions, if needed */
+
+    // Clears the set of all nodes except the dummy node
+    void clear();
+
+    // Copies the contents of other into the calling set
+    void copy(const Set& other);
 };
