@@ -82,6 +82,8 @@ private:
 
     /* Add Auxiliarly functions, if needed */
 
+    void insert(int value);
+
     // Clears the set of all nodes except the dummy node
     void clear();
 

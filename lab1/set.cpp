@@ -8,7 +8,7 @@ std::size_t Set::Node::count_nodes = 0;
 // Used only for debug purposes
 // Return number of existing nodes
 std::size_t Set::get_count_nodes() {
-    std::cout << "Nodes: "<< Set::Node::count_nodes << "\n";
+    std::cout << Set::Node::count_nodes << "\n";
     return Set::Node::count_nodes;
 }
 
@@ -22,47 +22,16 @@ Set::Set() : head{new Node{}}, counter{0} {  // create the dummy node
 // Constructor for creating a singleton {x}
 Set::Set(int x) : Set() {
 
-    Node* seccondNode = new Node(x, nullptr);
-    head->next = seccondNode;
+   insert(x);
 }
 
 // Constructor: create a set with elements
 // elements is not sorted and values in it may not be unique
 Set::Set(const std::vector<int>& elements) : Set() 
 {
-    int maxVal = INT32_MIN;
-
-    for (size_t i = 0; i < elements.size(); i++)
-    {
-        if (elements[i] > maxVal) {
-            maxVal = elements[i];
-        }
+    for (int e : elements) {
+       insert(e); 
     }
-
-    int lastMinVal = INT32_MIN;
-
-    Node* lastNode = head;
-
-    while (lastMinVal != maxVal)
-    {
-        int minVal = INT32_MAX;
-
-        for (size_t i = 0; i < elements.size(); i++)
-        {
-            if (elements[i] > lastMinVal && elements[i] < minVal) {
-                minVal = elements[i];
-            }
-        }
-
-        // Create a new node with the smallest element
-        Node* node = new Node(minVal, 0);
-            
-        // Create a link between the last node and the current
-        lastNode->next = node;
-        lastNode = node;
-
-        lastMinVal = minVal;
-    } 
 }
 
 // copy constructor
@@ -75,7 +44,6 @@ Set::Set(const Set& other) : Set()
 Set& Set::operator=(Set other) {
 
     copy(other);
-
     return *this;
 }
 
@@ -147,41 +115,18 @@ Set Set::set_union(const Set& b) const
 {
     Set result = Set();
 
-    Node* current_node = result.head;
+    Node* current = head->next;
 
-    Node* a_node = head->next;
-    Node* b_node = b.head->next;
+    while (current != nullptr) {
+        result.insert(current->value);
+        current = current->next;
+    }
+    
+    current = b.head->next;
 
-    while (a_node != nullptr || b_node != nullptr) 
-    {
-        int val;
-
-        if (b_node == nullptr) {
-            val = a_node->value;
-        }
-        else if (a_node == nullptr) {
-            val = b_node->value;
-        } 
-        else if (a_node->value < b_node->value) {
-            val = a_node->value;
-        }
-        else {
-            val = b_node->value;
-        }
-
-        current_node->next = new Node(val);
-
-        while (a_node != nullptr && result.member(a_node->value)) {
-            a_node = a_node->next;
-        }
-
-        while (b_node != nullptr && result.member(b_node->value)) {
-            b_node = b_node->next;
-        }
-
-        if (a_node != nullptr || b_node != nullptr) {
-            current_node = current_node->next;
-        }
+    while (current != nullptr) {
+        result.insert(current->value);
+        current = current->next;
     }
 
     return result;
@@ -192,14 +137,12 @@ Set Set::set_intersection(const Set& b) const
 {        
     Set result = Set();
 
-    Node* result_current = result.head;
     Node* current = head->next;
 
     while (current != nullptr) 
     {
         if (b.member(current->value)) {
-            result_current->next = new Node(current->value);
-            result_current = result_current->next;
+            result.insert(current->value);
         }
 
         current = current->next;
@@ -209,17 +152,16 @@ Set Set::set_intersection(const Set& b) const
 }
 
 // Return a new Set representing the difference between Set *this and Set b
-Set Set::set_difference(const Set& b) const {
+Set Set::set_difference(const Set& b) const 
+{
     Set result = Set();
 
-    Node* result_current = result.head;
     Node* current = head->next;
 
     while (current != nullptr) 
     {
         if (!b.member(current->value)) {
-            result_current->next = new Node(current->value);
-            result_current = result_current->next;
+            result.insert(current->value);
         }
 
         current = current->next;
@@ -246,6 +188,22 @@ std::ostream& operator<<(std::ostream& os, const Set& rhs) {
 
 /********** Private member functions ************/
 
+void Set::insert(int value) 
+{
+    if (member(value)) {
+        return;
+    }
+
+    Node* current_node = head;
+
+    while (current_node->next != nullptr && current_node->next->value < value) {
+        current_node = current_node->next;
+    }
+
+    Node* new_node = new Node(value, current_node->next);
+    current_node->next = new_node;
+}
+
 void Set::clear() 
 {
     Node* current = head->next;
@@ -263,12 +221,9 @@ void Set::copy(const Set& other)
     clear();
 
     Node* current = other.head->next;
-    Node* lastNode = head;
     
     while (current != nullptr) {
-        Node* newNode = new Node(current->value, nullptr);
-        lastNode->next = newNode; 
-        lastNode = newNode;
+        insert(current->value);
         current = current->next;
     }
 }
