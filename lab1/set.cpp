@@ -8,7 +8,6 @@ std::size_t Set::Node::count_nodes = 0;
 // Used only for debug purposes
 // Return number of existing nodes
 std::size_t Set::get_count_nodes() {
-    std::cout << Set::Node::count_nodes << "\n";
     return Set::Node::count_nodes;
 }
 
@@ -37,13 +36,21 @@ Set::Set(const std::vector<int>& elements) : Set()
 // copy constructor
 Set::Set(const Set& other) : Set() 
 {
-    copy(other);
+    clear();
+
+    Node* current = other.head->next;
+    
+    while (current != nullptr) {
+        insert(current->value);
+        current = current->next;
+    }
 }
 
 // Assignment operator: use copy-and-swap idiom
 Set& Set::operator=(Set other) {
 
-    copy(other);
+    std::swap(head, other.head);
+    counter = other.counter;
     return *this;
 }
 
@@ -51,21 +58,13 @@ Set& Set::operator=(Set other) {
 Set::~Set() 
 {
     clear();
-    head->~Node();
+    delete head;
 }
 
 // Return number of elements in the set
 std::size_t Set::cardinality() const 
 {
-    Node* current = head;
-    ssize_t count = 0;
-
-    while (current->next != nullptr) {
-        current = current->next;
-        count++;
-    }
-
-    return count; 
+    return counter; 
 }
 
 // Test if set is empty
@@ -96,7 +95,7 @@ bool Set::is_subset(const Set& b) const
 {   
     Node* current = head->next;
 
-    for (int i = 0; i < cardinality(); i++) 
+    for (size_t i = 0; i < cardinality(); i++) 
     {
         if (!b.member(current->value)) {
             return false;
@@ -202,6 +201,8 @@ void Set::insert(int value)
 
     Node* new_node = new Node(value, current_node->next);
     current_node->next = new_node;
+
+    counter++;
 }
 
 void Set::clear() 
@@ -211,19 +212,9 @@ void Set::clear()
 
     while (current != nullptr) {
         Node* next = current->next;
-        current->~Node();
+        delete current;
         current = next;
     }
-}
 
-void Set::copy(const Set& other) 
-{
-    clear();
-
-    Node* current = other.head->next;
-    
-    while (current != nullptr) {
-        insert(current->value);
-        current = current->next;
-    }
+    counter = 0;
 }
