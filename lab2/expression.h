@@ -8,7 +8,6 @@
 #include <iostream>
 
 constexpr double Epsilon = 1.0e-5;
-
 class Expression {
 public:
     // Destructor
@@ -16,7 +15,15 @@ public:
         --count_expressions;
     }
 
-    // ADD OTHER MEMBER FUNCTIONS
+    virtual bool isRoot(double x);
+      
+    virtual explicit operator std::string();
+
+    virtual double operator()(double d);
+    
+    friend std::ostream& operator<<(std::ostream& os, const Expression& E);
+
+    virtual Expression& clone(Expression E);
 
     // Return number of existing instances of class Expression
     // Used only for debug purposes
