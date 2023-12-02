@@ -57,6 +57,11 @@
         "fstream": "cpp",
         "set": "cpp",
         "unordered_set": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "optional": "cpp",
+        "charconv": "cpp",
+        "span": "cpp",
+        "variant": "cpp",
+        "format": "cpp"
     }
 }

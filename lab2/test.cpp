@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
+#include <format>
 
 #include "polynomial.h"
 #include "logarithm.h"

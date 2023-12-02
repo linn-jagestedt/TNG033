@@ -10,24 +10,29 @@
 #include "expression.h"
 
 class Logarithm : public Expression {
-
     public:
-
-        Logarithm();
-
-        Logarithm(double c1, double c2, unsigned int b, Expression E);
-
-        Logarithm(const Logarithm& p);
-
-        Logarithm& Logarithm::operator =(Logarithm);
-
-        void Logarithm::set_base(unsigned int b);
-        
-    private:
 
         double c1, c2;
 
         unsigned int b;
 
-        Expression E;
+        Expression* E;
+
+        Logarithm();
+
+        Logarithm(const Expression& E, double c1, double c2, unsigned int b);
+
+        Logarithm(const Logarithm& l);
+
+	    ~Logarithm() override; 
+        
+        explicit operator std::string() const override;
+
+        double operator()(double d) const override;
+
+        Expression* clone() const override;
+
+        Logarithm& operator =(Logarithm l);
+
+        void set_base(unsigned int b);
 };

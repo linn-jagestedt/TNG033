@@ -11,19 +11,17 @@ constexpr double Epsilon = 1.0e-5;
 class Expression {
 public:
     // Destructor
-    virtual ~Expression() {
-        --count_expressions;
-    }
+    virtual ~Expression();
 
-    virtual bool isRoot(double x);
+    bool isRoot(double x) const;
       
-    virtual explicit operator std::string();
+    virtual explicit operator std::string() const = 0;
 
-    virtual double operator()(double d);
+    virtual double operator()(double d) const = 0;
     
     friend std::ostream& operator<<(std::ostream& os, const Expression& E);
 
-    virtual Expression& clone(Expression E);
+    virtual Expression* clone() const = 0;
 
     // Return number of existing instances of class Expression
     // Used only for debug purposes
@@ -31,14 +29,10 @@ public:
 
 protected:
     // Default constructor
-    Expression() {
-        ++count_expressions;
-    }
+    Expression();
 
     // Copy constructor
-    Expression(const Expression&) {
-        ++count_expressions;
-    }
+    Expression(const Expression&);
 
     // total number of existing expressions -- only to help to detect bugs in the code
     static std::size_t count_expressions;

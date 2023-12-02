@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <vector>
+
 #include "expression.h"
 
 class Polynomial : public Expression {
@@ -14,25 +15,31 @@ class Polynomial : public Expression {
 
         std::vector<double> coeff;
 
-        Polynomial(std::vector<double> v);
+        Polynomial(const std::vector<double>& v);
 
         Polynomial(double d);
 
         Polynomial(const Polynomial& p);
 
-        virtual bool isRoot(double x);
+	    ~Polynomial() override = default; 
 
-        virtual explicit operator std::string();
+        explicit operator std::string() const override;
 
-        virtual double operator()(double d);
+        double operator()(double d) const override;
+
+        Expression* clone() const override;
 
         Polynomial& operator =(Polynomial p);
 
-        Polynomial& operator +=(Polynomial p);
-        
-        Polynomial& operator +(Polynomial p);
+        Polynomial operator +=(const Polynomial& p);
 
-        Polynomial& operator +(double p);
+        Polynomial operator +=(double d);
 
-        Polynomial& operator [](int i);
+	    friend Polynomial operator+(Polynomial a, const Polynomial& b);
+
+	    friend Polynomial operator+(Polynomial& a, double b);
+
+        double& operator [](int i);
+
+        const double& operator [](int i) const;
 };
