@@ -11,7 +11,7 @@
 
 Logarithm::Logarithm() {
     c1 = 0;
-    c2 = 0;
+    c2 = 1;
     b = 2;
 
 	std::vector<double> coeff = { 0,1 };
@@ -44,7 +44,8 @@ Logarithm::~Logarithm() {
 }
 
 Logarithm::operator std::string() const {
-    return std::format("{:.2} + {:.2} * Log_{:1}({})", c1, c2, b, (std::string)(*E));
+    std::string sign = c2 < 0 ? " - " : " + ";
+    return std::format("{:.2f}{}{:.2f} * Log_{:}( {} )", c1, sign, std::abs(c2), b, (std::string)(*E));
 }
 
 double Logarithm::operator()(double d) const {
@@ -55,10 +56,11 @@ Expression* Logarithm::clone() const {
     return new Logarithm(*this);
 }
 
-Logarithm& Logarithm::operator =(Logarithm l) {
+Logarithm& Logarithm::operator =(const Logarithm& l) {
     c1 = l.c1;
     c2 = l.c2;
     b = l.b;
+    delete E;
     E = l.E->clone();
 
     return *this;

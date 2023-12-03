@@ -32,7 +32,7 @@ class Logarithm : public Expression {
 
         Expression* clone() const override;
 
-        Logarithm& operator =(Logarithm l);
+        Logarithm& operator =(const Logarithm& l);
 
         void set_base(unsigned int b);
 };

@@ -23,6 +23,8 @@ public:
 
     virtual Expression* clone() const = 0;
 
+    Expression& operator=(const Expression&) = delete;
+
     // Return number of existing instances of class Expression
     // Used only for debug purposes
     static std::size_t get_count_expressions();

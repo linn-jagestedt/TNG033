@@ -61,7 +61,7 @@ Polynomial& Polynomial::operator =(Polynomial p) {
 
 Polynomial Polynomial::operator +=(const Polynomial& p)
 {
-    for (size_t i = 0; p.coeff.size(); i++) {
+    for (size_t i = 0; i < p.coeff.size(); i++) {
         if (i < coeff.size()) {
             coeff[i] += p.coeff[i];
         } else {
