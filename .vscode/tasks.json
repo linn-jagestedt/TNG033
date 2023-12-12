@@ -7,7 +7,7 @@
             "args": [
                 "-std=c++23",
                 "-fdiagnostics-color=always",
-                "-g",
+                "-g3",
                 "${fileDirname}/*.cpp",
                 "-o",
                 "${fileDirname}/bin/${fileBasenameNoExtension}",

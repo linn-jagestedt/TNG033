@@ -8,6 +8,7 @@
 #include <format>
 #include <vector>
 
+
 double calculate(double k) {
     double const factor{8.0 * k};
     double const init{4.0 / (factor + 1.0) - 1.0 / (factor + 4.0)};

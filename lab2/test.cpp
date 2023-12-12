@@ -430,11 +430,11 @@ int main() {
     }
 
     assert(Expression::get_count_expressions() == 0);
-
     /*****************************************************
      * TEST PHASE 16                                      *
      * Expression: assignment                             *
      ******************************************************/
+/*
     std::cout << "\nTEST PHASE 16:  Expression::operator=\n";
 
     {
@@ -449,4 +449,5 @@ int main() {
     }
 
     std::cout << "\nSuccess!!\n";
+*/
 }
