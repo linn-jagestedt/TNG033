@@ -10,6 +10,7 @@
 #include <utility>   //std::pair
 #include <fstream>
 #include <cassert>
+#include <algorithm>
 
 
 // A function to test the output of the program
@@ -25,7 +26,7 @@ int main() {
 	std::string file_name;
 	std::cin >> file_name;
 
-	std::ifstream in_File{"../code/" + file_name};  // modify path, if needed
+	std::ifstream in_File{"/home/linn/Documents/Repositories/TNG033/lab3/exercise2/" + file_name};  // modify path, if needed
 
 	if (!in_File) {
 		std::cout << "Could not open input file!!\n";
@@ -35,16 +36,59 @@ int main() {
     std::map<std::string, int> table;
     int counter{0};  // to count total number of words read from the input file
 
-    //ADD CODE to build table
+    std::string ignore = ".,!?:\"();";
+    
+    std::string word;
+    while (in_File >> word) 
+    {
+        //remove chars
+        word.erase(
+            std::remove_if(
+                word.begin(), 
+                word.end(),
+                [ignore](auto c) {
+                    return ignore.contains(c);
+                }
+            ),
+            word.end()
+        );
+
+        //to lower
+        std::transform(
+            word.begin(), 
+            word.end(), 
+            word.begin(),
+            [](auto c) { 
+                return std::tolower(c);
+            }
+        );
+
+        counter++;
+        table[word]++;
+    }
 
     std::vector<std::pair<std::string, int>> freq;
+    
+    std::transform(
+        table.begin(), 
+        table.end(), 
+        std::back_inserter(freq), 
+        [](const auto& entry) {
+            return entry; 
+        }
+    );
 
-    //ADD CODE to build vector freq
-
+    std::sort(
+        freq.begin(), 
+        freq.end(), 
+        [](const auto& a, const auto& b) { 
+            return a.second == b.second ? a.first < b.first : a.second > b.second; 
+        }
+    );
 
     /* ************** Testing **************** */
 
-    test(table, freq, name, counter);
+    test(table, freq, "out_" + file_name, counter);
 }
 
 
@@ -56,7 +100,7 @@ int main() {
 void test(const std::map<std::string, int>& t, const std::vector<std::pair<std::string, int>>& v,
           const std::string& file_name, int n) {
 
-    std::ifstream file{"../code/out_" + file_name}; //modify path, if needed
+    std::ifstream file{"/home/linn/Documents/Repositories/TNG033/lab3/exercise2/" + file_name}; //modify path, if needed
 
     // Test if stream is in good state
     assert(bool(file) == true);

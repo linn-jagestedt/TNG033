@@ -67,6 +67,7 @@ int main() {
     std::cout << "** Test 4:  operator*=\n\n";
 
     p3 *= p4;
+
     assert(std::string(p3) == std::string("-16X^1 + 44X^2 - 25X^4 + 20X^5 - 58X^6 + 10X^8 + 10X^10 "
                                           "- 1X^12 + 6X^17 - 15X^18 + 3X^22"));
     assert(p3.degree() == 22);

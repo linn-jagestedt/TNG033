@@ -8,23 +8,54 @@
 #include <vector>
 #include <string>
 
-class Polynomial {
-
-    unsigned int _n;
-    std::map<int, int> _coefficients_table; // non-zero terms only
-
+class Polynomial 
+{
     public: 
-        Polynomial(); 
         ~Polynomial() = default;
 
-        Polynomial(const std::vector<int>& coeffs); // no loops
+        Polynomial() = default; 
+        
+        Polynomial(const int);
+        
+        Polynomial(const int, const int); 
+        
+        Polynomial(const std::initializer_list<std::pair<int, int>>&); // no loops
+        
+        Polynomial(const Polynomial&) = default;
 
-        Polynomial(const Polynomial& p) = default;
+        int degree() const;
 
-        operator int() const; 
         explicit operator std::string() const;
 
+        Polynomial& operator +=(const Polynomial&);
+
+        Polynomial& operator -=(const Polynomial&);
+        
+        Polynomial& operator *=(const Polynomial&);
+        
+        bool operator ==(const Polynomial&) const;
+
+        bool operator !=(const Polynomial&) const;
+        
         inline Polynomial& operator =(const Polynomial&) = default;
 
-        inline int degree();
+        friend std::ostream& operator<<(std::ostream&, const Polynomial&);
+
+        friend Polynomial operator+(Polynomial, const Polynomial&);
+        
+        friend Polynomial operator-(Polynomial, const Polynomial&);
+
+        friend Polynomial operator*(Polynomial, const Polynomial&);
+
+        friend Polynomial operator +(int, const Polynomial&);
+        
+        friend Polynomial operator -(int, const Polynomial&);
+        
+        friend Polynomial operator *(int, const Polynomial&);
+
+        friend bool operator ==(Polynomial, int);
+    
+    private:
+
+        std::map<int, int> m_coeffs; // non-zero terms only
 };
