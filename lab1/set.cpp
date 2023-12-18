@@ -110,22 +110,35 @@ bool Set::is_subset(const Set& b) const
 // Return a new Set representing the union of Sets *this and b
 // Repeated values are not allowed
 // Implement an algorithm similar to the one in exercise 3/Set 1, but don't use vectors
-Set Set::set_union(const Set& b) const 
+Set Set::set_union(const Set& other) const 
 {
     Set result = Set();
 
-    Node* current = head->next;
+    Node* this_ptr = head->next;
+    Node* other_ptr = other.head->next;
 
-    while (current != nullptr) {
-        result.insert(current->value);
-        current = current->next;
+    while (this_ptr != nullptr && other_ptr != nullptr) {
+        if (this_ptr->value < other_ptr->value) {
+            result.insert(this_ptr->value);
+            this_ptr = this_ptr->next;
+        } else if (other_ptr->value < this_ptr->value) {
+            result.insert(other_ptr->value);
+            other_ptr = other_ptr->next;
+        } else {
+            result.insert(this_ptr->value);
+            this_ptr = this_ptr->next;
+            other_ptr = other_ptr->next;
+        }
     }
-    
-    current = b.head->next;
 
-    while (current != nullptr) {
-        result.insert(current->value);
-        current = current->next;
+    while (this_ptr != nullptr) {
+        result.insert(this_ptr->value);
+        this_ptr = this_ptr->next;
+    }
+
+    while (other_ptr != nullptr) {
+        result.insert(other_ptr->value);
+        other_ptr = other_ptr->next;
     }
 
     return result;
